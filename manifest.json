@@ -1,0 +1,20 @@
+{
+  "display_information": {
+    "name": "HelpMe Slack Bot",
+    "description": "Ask course questions from Slack. Routes to the university ChatBot service."
+  },
+  "features": {
+    "bot_user": { "display_name": "HelpMe Bot", "always_online": true },
+    "slash_commands": [
+      { "command": "/link", "description": "Link your HelpMe/ChatBot account", "should_escape": false },
+      { "command": "/ask", "description": "Ask the course chatbot a question (use --course=ID to target a course)", "should_escape": false }
+    ]
+  },
+  "oauth_config": { "scopes": { "bot": ["commands", "chat:write"] } },
+  "settings": {
+    "interactivity": { "is_enabled": true },
+    "socket_mode_enabled": true
+  }
+}
+
+
