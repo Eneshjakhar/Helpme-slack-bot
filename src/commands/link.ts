@@ -3,6 +3,10 @@ import type { Logger } from 'pino';
 import { saveLink } from '../db/index.js';
 
 export function registerLinkCommand(app: App, _logger: Logger): void {
+  async function ensureDmChannel(client: any, userId: string): Promise<string> {
+    const opened = await client.conversations.open({ users: userId });
+    return opened.channel.id as string;
+  }
   app.command('/link', async ({ ack, body, respond, client }) => {
     await ack();
     const requireLinking = (process.env.REQUIRE_LINKING || '').toLowerCase() === 'true';
@@ -87,7 +91,8 @@ export function registerLinkCommand(app: App, _logger: Logger): void {
     await saveLink(teamId, userId, { helpmeUserToken: token });
     if (channelId && userId) {
       if (String(channelId).startsWith('D')) {
-        await client.chat.postMessage({ channel: channelId, text: 'Linked. You can now use /ask.' });
+        const dm = await ensureDmChannel(client, userId);
+        await client.chat.postMessage({ channel: dm, text: 'Linked. You can now use /ask.' });
       } else {
         await client.chat.postEphemeral({ channel: channelId, user: userId, text: 'Linked. You can now use /ask.' });
       }

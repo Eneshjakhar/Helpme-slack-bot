@@ -14,6 +14,11 @@ const courseIdFromText = (t: string) => {
 export function registerAskCommand(app: App, logger: Logger): void {
   const chatbot = new ChatbotClient(logger);
 
+  async function ensureDmChannel(client: any, userId: string): Promise<string> {
+    const opened = await client.conversations.open({ users: userId });
+    return opened.channel.id as string;
+  }
+
   app.command('/ask', async ({ ack, body, respond, client }) => {
     await ack();
     const requireLinking = (process.env.REQUIRE_LINKING || '').toLowerCase() === 'true';
@@ -218,13 +223,7 @@ export function registerAskCommand(app: App, logger: Logger): void {
       }
       if (err?.code === 401 || /invalid api token/i.test(msg)) {
         const help = 'Your HMS token seems invalid. Run `/link` to update it or set DEFAULT_HMS_USER_TOKEN in .env, then retry.';
-        if (String(channelId).startsWith('D')) {
-          await client.chat.postMessage({ channel: channelId, text: help });
-        } else {
-          const meta = JSON.parse((view as any).private_metadata || '{}');
-          const userId = (body as any)?.user?.id || meta.user_id;
-          await client.chat.postEphemeral({ channel: channelId, user: userId, text: help });
-        }
+        await client.chat.postEphemeral({ channel: channelId, user: userId, text: help });
         return;
       }
       await safePostMessage(client, { channel: channelId, text: `Error: ${msg}` });
