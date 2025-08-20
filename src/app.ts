@@ -365,6 +365,18 @@ async function bootstrap() {
   // Register unlink command
   const { registerUnlinkCommand } = await import('./commands/unlink.js');
   registerUnlinkCommand(app, logger);
+  
+  // Register chatbot history command
+  const { registerChatbotHistoryCommand } = await import('./commands/chatbotHistory.js');
+  registerChatbotHistoryCommand(app, logger);
+  
+  // Register chatbot settings command
+  const { registerChatbotSettingsCommand } = await import('./commands/chatbotSettings.js');
+  registerChatbotSettingsCommand(app, logger);
+  
+  // Register chatbot models command
+  const { registerChatbotModelsCommand } = await import('./commands/chatbotModels.js');
+  registerChatbotModelsCommand(app, logger);
 
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   if (mode === 'SOCKET') {

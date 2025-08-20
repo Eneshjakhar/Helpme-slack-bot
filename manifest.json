@@ -35,6 +35,21 @@
         "command": "/default-course", 
         "description": "Set your default course for questions", 
         "should_escape": false
+      },
+      { 
+        "command": "/chatbot-history", 
+        "description": "View your recent chatbot interactions", 
+        "should_escape": false
+      },
+      { 
+        "command": "/chatbot-settings", 
+        "description": "View chatbot settings for a course", 
+        "should_escape": false
+      },
+      { 
+        "command": "/chatbot-models", 
+        "description": "View available AI models", 
+        "should_escape": false
       }
     ]
   },
