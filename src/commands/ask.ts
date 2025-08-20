@@ -1,7 +1,7 @@
 import type { App } from '@slack/bolt';
 import type { Logger } from 'pino';
 import { getUserCourses, getDefaultCourse } from '../db/index.js';
-import axios from 'axios';
+import { ChatbotService } from '../services/chatbot.service.js';
 
 export function registerAskCommand(app: App, logger: Logger): void {
   app.command('/ask', async ({ ack, body, respond, client }) => {
@@ -72,18 +72,10 @@ export function registerAskCommand(app: App, logger: Logger): void {
         text: `🤔 Asking about *${courseName}*...` 
       });
       
-      // Get user link data and validate
-      const { getUserLinkData } = await import('../db/index.js');
-      const userLink = await getUserLinkData(teamId, userId);
-      if (!userLink) {
-        await respond({
-          response_type: 'ephemeral',
-          text: '❌ You need to link your account first. Run `/link` to get started.'
-        });
-        return;
-      }
-      
-      const userToken = userLink.helpmeUserChatToken;
+      // Resolve user token and ask the chatbot using our existing service
+      const chatbotService = new ChatbotService();
+      const userInfo = await chatbotService.getUserInfo(teamId, userId);
+      const userToken = userInfo.helpmeUserChatToken || '';
       if (!userToken) {
         await respond({
           response_type: 'ephemeral',
@@ -92,26 +84,12 @@ export function registerAskCommand(app: App, logger: Logger): void {
         return;
       }
       
-      // Call HelpMe chatbot API
-      const helpMeBaseUrl = process.env.HELPME_BASE_URL || process.env.HELP_ME_BASE_URL || 'http://localhost:3000';
-      const chatbotResponse = await axios.post(
-        `${helpMeBaseUrl}/api/v1/chatbot/query`,
-        {
-          query: question,
-          type: 'slack'
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'HMS-API-KEY': process.env.HELPME_CHATBOT_API_KEY || '',
-            'HMS-API-TOKEN': userToken
-          }
-        }
-      );
+      // Ask the question using our existing chatbot service
+      const result = await chatbotService.askQuestion(question, [], userToken, courseId, teamId, userId);
       
       // Format the response
-      const responseText = chatbotResponse.data.response || chatbotResponse.data.answer;
-      const sourceDocs = chatbotResponse.data.sourceDocuments || [];
+      const responseText = result.chatbotResponse.answer;
+      const sourceDocs = result.chatbotResponse.sourceDocuments || [];
       
       let formattedResponse = `*Question:* ${question}\n*Course:* ${courseName}\n\n*Answer:*\n${responseText}`;
       
