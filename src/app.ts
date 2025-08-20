@@ -378,6 +378,10 @@ async function bootstrap() {
   const { registerChatbotModelsCommand } = await import('./commands/chatbotModels.js');
   registerChatbotModelsCommand(app, logger);
 
+  // Register upload file command
+  const { registerUploadFileCommand } = await import('./commands/uploadFile.js');
+  registerUploadFileCommand(app, logger);
+
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   if (mode === 'SOCKET') {
     const startupDelayMs = Number(process.env.SOCKET_START_DELAY_MS || 800);

@@ -50,10 +50,20 @@
         "command": "/chatbot-models", 
         "description": "View available AI models", 
         "should_escape": false
+      },
+      { 
+        "command": "/upload-file", 
+        "description": "Upload and analyze files with AI", 
+        "should_escape": false
       }
     ]
   },
-  "oauth_config": { "scopes": { "bot": ["commands", "chat:write"] } },
+  "oauth_config": { 
+    "scopes": { 
+      "bot": ["commands", "chat:write", "files:read", "files:write", "channels:history", "groups:history", "im:history", "mpim:history"],
+      "user": ["files:read"]
+    } 
+  },
   "settings": {
     "interactivity": { "is_enabled": true },
     "socket_mode_enabled": true
