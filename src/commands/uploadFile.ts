@@ -92,7 +92,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       const msg = error instanceof Error ? error.message : String(error);
       logger.error({ err: msg, userId: slackUserId, teamId }, 'Error opening upload modal');
       
-      // Fallback to simple instructions - use regular message instead of ephemeral
+      // Fallback 
       await client.chat.postMessage({
         channel: slackUserId,
         text: `📁 **File Upload Instructions:**
@@ -174,7 +174,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       // Get user's default course
       const defaultCourseId = await getDefaultCourse(teamId, slackUserId);
       
-            // Create form data for file upload as suggested by chatbot repo
+    // Create form data for file upload as suggested by chatbot repo
       const chatbotApiUrl = process.env.CHATBOT_API_URL || 'http://localhost:3003/chat';
       const chatbotApiKey = process.env.CHATBOT_API_KEY || '';
       
@@ -182,20 +182,18 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       const chatbotService = new ChatbotService();
       const userInfo = await chatbotService.getUserInfo(teamId, slackUserId);
       
-      // Import form-data dynamically
       const { default: FormData } = await import('form-data');
       const formData = new FormData();
       formData.append('question', question);
       formData.append('history', JSON.stringify([]));
       
-      // Add the file - use 'file' field name as expected by the chatbot controller
+      // Add the file 
       const buffer = Buffer.from(base64File, 'base64');
       formData.append('file', buffer, {
         filename: file.name || 'unknown_file',
         contentType: file.mimetype
       });
       
-      // Get form data headers first, then add our custom headers
       const formHeaders = formData.getHeaders();
       
       logger.info({ 
@@ -236,7 +234,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       
       const result = chatbotResponse.data as { answer: string };
       
-      // Post response - use postEphemeral for DMs to avoid messages_tab_disabled error
+      // Post response
       await client.chat.postEphemeral({
         channel: slackUserId,
         user: slackUserId,

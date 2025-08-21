@@ -4,6 +4,11 @@ import { LinkEntity, LinkStateEntity, UserCoursesEntity, UserLinkEntity, UserPre
 
 let dataSource: any = null;
 
+export async function getDatabaseConnection(): Promise<any> {
+  if (!dataSource) throw new Error('db not initialized');
+  return dataSource;
+}
+
 export async function ensureDb(logger: Logger): Promise<void> {
   const dbPath = process.env.DATABASE_PATH || './data/data.db';
   try {

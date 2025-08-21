@@ -55,6 +55,11 @@
         "command": "/upload-file", 
         "description": "Upload and analyze files with AI", 
         "should_escape": false
+      },
+      { 
+        "command": "/chatbot-thread", 
+        "description": "Ask questions in threaded conversations", 
+        "should_escape": false
       }
     ]
   },
