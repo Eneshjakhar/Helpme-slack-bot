@@ -250,9 +250,6 @@ LOG_LEVEL=debug  # debug|info|warn|error
 # Protects POST /link/callback for server-to-server linking
 LINK_SHARED_SECRET=dev-link-secret
 
-# --- Optional org hint for linking ---
-DEFAULT_ORG_ID=
-# HELPME_ORG_ID=
 
 # --- Optional: HelpMe REST base (not directly used by code) ---
 HELPME_API_BASE_URL=http://localhost:3000/api/v1
