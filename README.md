@@ -101,7 +101,7 @@ npm run dev
 
 Visit `GET /healthz` → `{ ok: true }`.
 
-### 4) Production
+### 4) Production (optional)
 ```bash
 npm run build
 npm start
@@ -244,7 +244,7 @@ Security specifics:
 - In HTTP mode, the callback exchanges the code immediately and shows a success/failure page.
 - A signed `POST /link/callback` exists for server-to-server linking; it requires header `X-HelpMe-Link-Secret: ${LINK_SHARED_SECRET}` and body `{ teamId, userId, helpmeUserToken }`.
 
-Dev simulation of server-to-server linking:
+Dev simulation of server-to-server linking (for visualisation):
 ```bash
 curl -X POST http://localhost:3109/link/callback \
   -H 'Content-Type: application/json' \
@@ -286,7 +286,7 @@ sequenceDiagram
   - `GET /healthz`, `GET /link/callback`, `POST /link/callback`
 
 - Domain service: `src/services/chatbot.service.ts`
-  - Authenticated client to HelpMe Chatbot API
+  - Authenticated client to Chatbot
   - Standard headers, timeouts, and error handling
   - Persists interactions/questions via DB layer
 
@@ -328,14 +328,6 @@ Standard headers:
 - `HMS-API-KEY: ${CHATBOT_API_KEY}`
 - `HMS_API_TOKEN: <per-user token from linking>`
 
-Endpoints used:
-- `POST chatbot/:courseId/ask` — `{ question, history }` → `{ answer, questionId, sourceDocuments?, ... }`
-- `GET course-setting/:courseId` — fetch settings
-- `PATCH course-setting/:courseId` — update settings
-- `PATCH course-setting/:courseId/reset` — reset settings
-- `GET question/:courseId/all`, `POST question/:courseId`, `PATCH question/:courseId/:id`, `DELETE question/:courseId/:id`
-- `GET chatbot/models`
-
 ---
 
 ## Configuration Reference
@@ -349,7 +341,6 @@ Endpoints used:
 - `DATABASE_PATH` — SQLite path (default `./data/data.db`)
 - `LOG_LEVEL` — `debug`, `info`, `warn`, `error`
 - `HELPME_BASE_URL` (or `HELP_ME_BASE_URL`) — HelpMe base used during OAuth exchange
-- `DEFAULT_ORG_ID`/`HELPME_ORG_ID` — Optional organization hint for OAuth start
 - `LINK_SHARED_SECRET` — Required by `POST /link/callback`
 - `CHATBOT_API_URL` — Chatbot API base (default `http://localhost:3003/chat`)
 - `CHATBOT_API_KEY` — Shared API key sent as `HMS-API-KEY`
@@ -412,7 +403,6 @@ npm run lint    # lint (non-failing)
 - OAuth state entries are short-lived and one-time consumable
 - Slack request signing is enforced by Bolt
 - Chat tokens are stored locally in SQLite; protect your `DATABASE_PATH`
-- Use HTTPS in production and secure your environment secrets
 
 For environment details and additional guidance, see [SETUP.md](./SETUP.md).
 
@@ -424,16 +414,12 @@ For environment details and additional guidance, see [SETUP.md](./SETUP.md).
   - Pros: No public ingress required; simpler local/dev.
   - Cons: Requires `SLACK_APP_TOKEN`; outbound connectivity to Slack required.
 
-- HTTP Events mode:
+- HTTP Events mode (optional):
   - Set `DELIVERY_MODE=HTTP`, ensure `${APP_BASE_URL}/slack/events` is reachable by Slack.
   - Configure Event Subscriptions in Slack, verify with the signing secret.
   - Pros: Fits standard web infra; no app-level token.
   - Cons: Public endpoint, load balancer/retry considerations.
 
-Rollout tips:
-- Use a process manager or container orchestration for restarts.
-- Preserve `DATABASE_PATH` on disk or mount a volume.
-- Enable `LOG_LEVEL=info` or `warn` in production.
 
 ### Delivery mode nuances
 
