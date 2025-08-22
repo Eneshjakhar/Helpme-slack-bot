@@ -15,7 +15,7 @@ export function registerCoursesCommand(app: App, logger: Logger): void {
     const isLinked = await isUserLinked(teamId, slackUserId);
     if (!isLinked) {
       await respond({
-        text: '❌ You need to link your account first. Run `/link` to get started.',
+        text: 'You need to link your account first. Run `/link` to get started.',
         response_type: 'ephemeral'
       });
       return;
@@ -54,7 +54,7 @@ export function registerCoursesCommand(app: App, logger: Logger): void {
       const msg = error instanceof Error ? error.message : String(error);
       logger.error({ err: msg, userId: slackUserId, teamId }, 'Error in courses command');
       await respond({
-        text: '❌ Sorry, I encountered an error while fetching your courses. Please try again.',
+        text: 'Sorry, I encountered an error while fetching your courses. Please try again.',
         response_type: 'ephemeral'
       });
     }

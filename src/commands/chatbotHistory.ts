@@ -71,12 +71,12 @@ export function registerChatbotHistoryCommand(app: App, logger: Logger): void {
       
       if (msg.includes('not linked')) {
         await respond({
-          text: '❌ You need to link your account first. Run `/link` to get started.',
+          text: 'You need to link your account first. Run `/link` to get started.',
           response_type: 'ephemeral'
         });
       } else {
         await respond({
-          text: `❌ Sorry, I encountered an error while fetching your history: ${msg}`,
+          text: `Sorry, I encountered an error while fetching your history: ${msg}`,
           response_type: 'ephemeral'
         });
       }

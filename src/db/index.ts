@@ -174,16 +174,16 @@ export interface ChatbotQuestionResponseChatbotDB {
   pageContent: string // this is the question
   metadata: {
     answer: string
-    timestamp?: string // i found a chatbot question without a timestamp 😭
+    timestamp?: string 
     courseId: string
     verified: boolean
     sourceDocuments: SourceDocument[]
     suggested: boolean
     inserted?: boolean
   }
-  userScoreTotal?: number // NOT returned from db, it's calculated and used by chatbot_questions page on frontend
-  timesAsked?: number // same as above
-  interactionsWithThisQuestion?: InteractionResponse[] // same as above
+  userScoreTotal?: number
+  timesAsked?: number 
+  interactionsWithThisQuestion?: InteractionResponse[] 
 }
 
 interface Loc {
@@ -203,16 +203,15 @@ export interface SourceDocument {
     apiDocId?: number
   }
   type?: string
-  // TODO: is it content or pageContent? since this file uses both. EDIT: It seems to be both/either. Gross.
   content?: string
   pageContent: string
   docName: string
   docId?: string // no idea if this exists in the actual data EDIT: yes it does, sometimes
-  pageNumbers?: number[] // same with this, but this might only be for the edit question modal
-  pageNumbersString?: string // used only for the edit question modal
+  pageNumbers?: number[] 
+  pageNumbersString?: string 
   sourceLink?: string
   pageNumber?: number
-  key?: string // used for front-end rendering
+  key?: string 
 }
 
 export interface PreDeterminedQuestion {
@@ -234,7 +233,7 @@ export interface Message {
   verified?: boolean
   sourceDocuments?: SourceDocument[]
   questionId?: string
-  thinkText?: string | null // used on frontend only
+  thinkText?: string | null
 }
 
 export interface ChatbotQueryParams {

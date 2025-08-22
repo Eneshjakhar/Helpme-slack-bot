@@ -19,7 +19,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
     if (!isLinked) {
       await client.chat.postMessage({
         channel: slackUserId,
-        text: '❌ You need to link your account first. Run `/link` to get started.'
+        text: 'You need to link your account first. Run `/link` to get started.'
       });
       return;
     }
@@ -29,7 +29,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
     if (!defaultCourseId) {
       await client.chat.postMessage({
         channel: slackUserId,
-        text: '❌ No default course set. Please set a default course with `/default-course` first.'
+        text: 'No default course set. Please set a default course with `/default-course` first.'
       });
       return;
     }
@@ -123,7 +123,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
     if (!fileId) {
       await client.chat.postMessage({
         channel: slackUserId,
-        text: '❌ No file selected. Please try again.'
+        text: 'No file selected. Please try again.'
       });
       return;
     }
@@ -136,7 +136,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       if (!file) {
         await client.chat.postMessage({
           channel: slackUserId,
-          text: '❌ Could not retrieve file information.'
+          text: 'Could not retrieve file information.'
         });
         return;
       }
@@ -146,7 +146,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       if (!file.mimetype || !supportedTypes.includes(file.mimetype)) {
         await client.chat.postMessage({
           channel: slackUserId,
-          text: `❌ File type not supported. Supported types: ${supportedTypes.join(', ')}`
+          text: `File type not supported. Supported types: ${supportedTypes.join(', ')}`
         });
         return;
       }
@@ -156,7 +156,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       if (!fileUrl) {
         await client.chat.postMessage({
           channel: slackUserId,
-          text: '❌ Could not access file URL.'
+          text: 'Could not access file URL.'
         });
         return;
       }
@@ -201,13 +201,13 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
         tokenLength: userInfo.helpmeUserChatToken?.length || 0
       }, 'Token info for file upload');
       
-      // Try different header format - some APIs expect different casing
+      // Try different header formas
       const headers = {
         ...formHeaders,
         'HMS-API-KEY': chatbotApiKey,
         'HMS-API-TOKEN': userInfo.helpmeUserChatToken,
-        'HMS_API_TOKEN': userInfo.helpmeUserChatToken, // Try underscore version too
-        'hms-api-token': userInfo.helpmeUserChatToken, // Try lowercase version
+        'HMS_API_TOKEN': userInfo.helpmeUserChatToken, 
+        'hms-api-token': userInfo.helpmeUserChatToken, 
         'X-Slack-User-Id': slackUserId,
         'X-Slack-Team-Id': teamId,
       };
@@ -234,7 +234,6 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       
       const result = chatbotResponse.data as { answer: string };
       
-      // Post response
       await client.chat.postEphemeral({
         channel: slackUserId,
         user: slackUserId,
@@ -248,7 +247,7 @@ export function registerUploadFileCommand(app: App, logger: Logger): void {
       await client.chat.postEphemeral({
         channel: slackUserId,
         user: slackUserId,
-        text: `❌ Error processing file: ${msg}`
+        text: `Error processing file: ${msg}`
       });
     }
   });

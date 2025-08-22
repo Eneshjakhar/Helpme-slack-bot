@@ -27,7 +27,7 @@ export function registerChatbotModelsCommand(app: App, logger: Logger): void {
         modelsPreview: models ? JSON.stringify(models).substring(0, 200) : null
       }, 'Models API response');
       
-      // Show exactly what we get from the chatbot API
+      // Show what we get from the chatbot API
       let modelsText = `🤖 **Available AI Models**\n\n`;
       
       if (models && typeof models === 'object') {
@@ -51,12 +51,12 @@ export function registerChatbotModelsCommand(app: App, logger: Logger): void {
       
       if (msg.includes('not linked')) {
         await respond({
-          text: '❌ You need to link your account first. Run `/link` to get started.',
+          text: 'You need to link your account first. Run `/link` to get started.',
           response_type: 'ephemeral'
         });
       } else {
         await respond({
-          text: `❌ Sorry, I encountered an error while fetching models: ${msg}`,
+          text: `Sorry, I encountered an error while fetching models: ${msg}`,
           response_type: 'ephemeral'
         });
       }

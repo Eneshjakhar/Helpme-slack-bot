@@ -59,7 +59,7 @@ async function bootstrap() {
             <html>
               <head><title>Missing Parameters</title></head>
               <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                <h1>❌ Missing Parameters</h1>
+                <h1>Missing Parameters</h1>
                 <p>OAuth callback is missing required state or code parameters.</p>
                 <p>Please try the linking process again from Slack.</p>
               </body>
@@ -130,7 +130,7 @@ async function bootstrap() {
           <html>
             <head><title>Linking Failed</title></head>
             <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-              <h1>❌ Linking Failed</h1>
+              <h1>Linking Failed</h1>
               <p>Could not complete linking: ${errorMessage}</p>
               <p>Please run <code>/link</code> again in Slack.</p>
             </body>
@@ -190,7 +190,7 @@ async function bootstrap() {
             <html>
               <head><title>Missing Parameters</title></head>
               <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                <h1>❌ Missing Parameters</h1>
+                <h1>Missing Parameters</h1>
                 <p>OAuth callback is missing required state or code parameters.</p>
                 <p>Please try the linking process again from Slack.</p>
               </body>
@@ -205,7 +205,7 @@ async function bootstrap() {
             <html>
               <head><title>Invalid State</title></head>
               <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-                <h1>❌ Invalid or Expired State</h1>
+                <h1>Invalid or Expired State</h1>
                 <p>This linking session has expired or is invalid.</p>
                 <p>Please run <code>/link</code> again in Slack to start a new linking session.</p>
               </body>
@@ -214,7 +214,6 @@ async function bootstrap() {
         }
 
         // Exchange code with HelpMe (per new HelpMe contract)
-        // Note: HelpMe redirects to port 3002 for finish, so we use 3002 for exchange
         const helpMeBaseUrl = process.env.HELPME_BASE_URL || process.env.HELP_ME_BASE_URL || 'http://localhost:3000';
         const exchangeUrl = `${helpMeBaseUrl.replace(':3000', ':3002')}/api/v1/auth/slack/exchange`;
 
@@ -318,7 +317,7 @@ async function bootstrap() {
           <html>
             <head><title>Linking Failed</title></head>
             <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
-              <h1>❌ Linking Failed</h1>
+              <h1>Linking Failed</h1>
               <p>Could not complete linking: ${errorMessage}</p>
               <p>Status: ${statusCode}</p>
               <p>Please run <code>/link</code> again in Slack.</p>
@@ -414,7 +413,6 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });

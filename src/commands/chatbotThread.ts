@@ -10,11 +10,11 @@ export function registerChatbotThreadCommand(app: App, logger: any) {
     const slackUserId = command.user_id;
     const teamId = command.team_id;
     const question = command.text;
-    const threadTs = command.thread_ts || command.ts; // Use thread timestamp if in thread, otherwise use command timestamp
+    const threadTs = command.thread_ts || command.ts;
 
     if (!question) {
       await respond({
-        text: '❌ Please provide a question. Usage: `/chatbot-thread <your question>`',
+        text: 'Please provide a question. Usage: `/chatbot-thread <your question>`',
         response_type: 'ephemeral'
       });
       return;
@@ -27,7 +27,7 @@ export function registerChatbotThreadCommand(app: App, logger: any) {
       
       if (!userInfo.helpmeUserChatToken) {
         await respond({
-          text: '❌ You need to link your account first. Run `/link` to get started.',
+          text: 'You need to link your account first. Run `/link` to get started.',
           response_type: 'ephemeral'
         });
         return;
@@ -37,7 +37,7 @@ export function registerChatbotThreadCommand(app: App, logger: any) {
       const defaultCourseId = await getDefaultCourse(teamId, slackUserId);
       if (!defaultCourseId) {
         await respond({
-          text: '❌ No default course set. Please set a default course with `/default-course`.',
+          text: 'No default course set. Please set a default course with `/default-course`.',
           response_type: 'ephemeral'
         });
         return;
@@ -70,7 +70,7 @@ export function registerChatbotThreadCommand(app: App, logger: any) {
           text: `🤖 **AI Response:**\n\n${result.chatbotResponse.answer}`
         });
       } catch (postError) {
-        // If posting to channel fails, respond directly to user
+        // If posting to channel fails
         logger.warn({ postError, channelId: command.channel_id }, 'Failed to post in channel, responding directly');
         await respond({
           text: `🤖 **AI Response:**\n\n${result.chatbotResponse.answer}`,
@@ -83,7 +83,7 @@ export function registerChatbotThreadCommand(app: App, logger: any) {
       logger.error({ err: msg, userId: slackUserId, teamId }, 'Error in chatbot thread command');
 
       await respond({
-        text: `❌ Error: ${msg}`,
+        text: `Error: ${msg}`,
         response_type: 'ephemeral'
       });
     }

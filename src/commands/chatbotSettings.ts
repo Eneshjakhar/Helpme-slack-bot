@@ -23,17 +23,11 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
       const userCourses = await getUserCourses(teamId, slackUserId);
       if (!userCourses) {
         await respond({
-          text: '❌ No course information found. Please run `/courses` to refresh your course data.',
+          text: 'No course information found. Please run `/courses` to refresh your course data.',
           response_type: 'ephemeral'
         });
         return;
       }
-      
-      // Debug: Log the actual courses available
-      logger.info({ 
-        userInput: text.trim(),
-        availableCourses: userCourses.courses.map(c => ({ id: c.id, name: c.name }))
-      }, 'Chatbot settings course matching debug');
       
       // Parse course input and find the actual course ID
       let courseId: number;
@@ -51,13 +45,13 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
             courseName = foundCourse.name;
           } else {
             await respond({
-              text: `❌ Course ID ${inputAsNumber} not found in your enrolled courses. Please use \`/courses\` to see your enrolled courses.`,
+              text: `Course ID ${inputAsNumber} not found in your enrolled courses. Please use \`/courses\` to see your enrolled courses.`,
               response_type: 'ephemeral'
             });
             return;
           }
         } else {
-          // User entered text - try to find by name with comprehensive matching
+          // User entered text
           const normalizedInput = userInput.replace(/\s+/g, '').toLowerCase();
           
           logger.info({ 
@@ -121,7 +115,7 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
             courseName = foundCourse.name;
           } else {
             await respond({
-              text: `❌ Course "${userInput}" not found in your enrolled courses. Please use \`/courses\` to see your enrolled courses.`,
+              text: `Course "${userInput}" not found in your enrolled courses. Please use \`/courses\` to see your enrolled courses.`,
               response_type: 'ephemeral'
             });
             return;
@@ -132,7 +126,7 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
         const defaultCourseId = await getDefaultCourse(teamId, slackUserId);
         if (!defaultCourseId) {
           await respond({
-            text: '❌ No default course set. Please specify a course ID: `/chatbot-settings <course_id>` or set a default course with `/default-course`.',
+            text: 'No default course set. Please specify a course ID: `/chatbot-settings <course_id>` or set a default course with `/default-course`.',
             response_type: 'ephemeral'
           });
           return;
@@ -141,7 +135,7 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
         const foundCourse = userCourses.courses.find((course: { id: number; name: string }) => course.id === defaultCourseId);
         if (!foundCourse) {
           await respond({
-            text: '❌ Your default course is not in your enrolled courses. Please set a new default course with `/default-course`.',
+            text: 'Your default course is not in your enrolled courses. Please set a new default course with `/default-course`.',
             response_type: 'ephemeral'
           });
           return;
@@ -151,17 +145,9 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
         courseName = foundCourse.name;
       }
       
-      // Get chatbot settings for the course
+      // Get chatbot settings
       const settings = await chatbotService.getChatbotSettings(courseId, userToken);
-      
-      // Log the response for debugging
-      logger.info({ 
-        settingsType: typeof settings, 
-        settingsKeys: settings && typeof settings === 'object' ? Object.keys(settings) : null,
-        settingsPreview: settings ? JSON.stringify(settings).substring(0, 200) : null,
-        courseId
-      }, 'Settings API response');
-      
+
       // Format the settings display
       let settingsText = `⚙️ **Chatbot Settings for Course ${courseId}${courseName ? ` (${courseName})` : ''}**\n\n`;
       
@@ -174,13 +160,7 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
         settingsText += `**Top K:** ${metadata.topK || 'Default'}\n`;
         settingsText += `**Similarity Threshold:** ${metadata.similarityThresholdDocuments || metadata.similarityThreshold || 'Default'}\n`;
         
-        // Add any other relevant settings
-        if (metadata.maxTokens) {
-          settingsText += `**Max Tokens:** ${metadata.maxTokens}\n`;
-        }
-        if (metadata.topP) {
-          settingsText += `**Top P:** ${metadata.topP}\n`;
-        }
+    
         settingsText += '\n';
         
         if (metadata.prompt) {
@@ -212,17 +192,17 @@ export function registerChatbotSettingsCommand(app: App, logger: Logger): void {
       
       if (msg.includes('not linked')) {
         await respond({
-          text: '❌ You need to link your account first. Run `/link` to get started.',
+          text: 'You need to link your account first. Run `/link` to get started.',
           response_type: 'ephemeral'
         });
       } else if (msg.includes('404') || msg.includes('Not Found')) {
         await respond({
-          text: `❌ Course not found or you don't have access to course settings.`,
+          text: `Course not found or you don't have access to course settings.`,
           response_type: 'ephemeral'
         });
       } else {
         await respond({
-          text: `❌ Sorry, I encountered an error while fetching settings: ${msg}`,
+          text: `Sorry, I encountered an error while fetching settings: ${msg}`,
           response_type: 'ephemeral'
         });
       }

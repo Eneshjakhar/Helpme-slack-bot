@@ -87,7 +87,6 @@ export function registerAskCommand(app: App, logger: Logger): void {
       // Ask the question using our existing chatbot service
       const result = await chatbotService.askQuestion(question, [], userToken, courseId, teamId, userId);
       
-      // Format the response
       const responseText = result.chatbotResponse.answer;
       const sourceDocs = result.chatbotResponse.sourceDocuments || [];
       

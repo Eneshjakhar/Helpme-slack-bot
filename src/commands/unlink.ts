@@ -36,7 +36,7 @@ export function registerUnlinkCommand(app: App, logger: Logger): void {
       const msg = error instanceof Error ? error.message : String(error);
       logger.error({ err: msg, userId: slackUserId, teamId }, 'Error in unlink command');
       await respond({
-        text: '❌ Sorry, I encountered an error while unlinking your account. Please try again.',
+        text: 'Sorry, I encountered an error while unlinking your account. Please try again.',
         response_type: 'ephemeral'
       });
     }
